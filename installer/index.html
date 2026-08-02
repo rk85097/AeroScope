@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AeroScope Installer</title>
+    <script type="module" src="https://unpkg.com/esp-web-tools@10/dist/web/install-button.js?module"></script>
+    <style>
+      body { font-family: system-ui, sans-serif; margin: 0; background: #f5f7f8; color: #162026; }
+      main { max-width: 720px; margin: 0 auto; padding: 32px; }
+      section { background: white; border: 1px solid #d9e0e4; border-radius: 8px; padding: 24px; }
+      h1 { margin-top: 0; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>AeroScope Installer</h1>
+        <p>Connect the Spotpear ESP32-S3-Touch-LCD-2.8-D over USB, hold BOOT if required, then install the factory image.</p>
+        <esp-web-install-button manifest="manifest.json"></esp-web-install-button>
+      </section>
+    </main>
+  </body>
+</html>

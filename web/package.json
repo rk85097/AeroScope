@@ -1,0 +1,21 @@
+{
+  "name": "aeroscope-control-panel",
+  "version": "0.1.0-dev",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@vitejs/plugin-react": "6.0.5",
+    "vite": "8.2.0",
+    "typescript": "7.0.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "lucide-react": "1.28.0"
+  },
+  "devDependencies": {
+    "vitest": "4.1.10"
+  }
+}

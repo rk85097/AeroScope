@@ -1,0 +1,8 @@
+# Name,   Type, SubType, Offset,  Size, Flags
+nvs,      data, nvs,     0x9000,  0x5000,
+otadata,  data, ota,     0xe000,  0x2000,
+app0,     app,  ota_0,   0x10000, 0x250000,
+app1,     app,  ota_1,   0x260000,0x250000,
+assets,   data, spiffs,  0x4b0000,0x1c0000,
+maps,     data, fat,     0x670000,0x180000,
+coredump, data, coredump,0x7f0000,0x10000,

@@ -1,0 +1,10 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "kind": "airport", "name": "Sample Airport" },
+      "geometry": { "type": "Point", "coordinates": [34.8867, 32.0114] }
+    }
+  ]
+}

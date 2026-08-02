@@ -1,0 +1,32 @@
+# PlatformIO / firmware build output
+.pio/
+compile_commands.json
+
+# Python caches
+.pytest_cache/
+__pycache__/
+*.py[cod]
+
+# Web dependencies/build output
+web/node_modules/
+web/build/
+web/dist/
+
+# Local backups and generated rollback artifacts
+backups/
+firmware-backups/
+*_backup*/
+*_restore_tmp*/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.bak
+*.old
+*.swp
+monitor-*.txt
+monitor-*.log
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

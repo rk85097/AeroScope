@@ -1,0 +1,15 @@
+{
+  "name": "AeroScope",
+  "version": "0.1.0-dev",
+  "home_assistant_domain": "micro_radar_hd",
+  "funding_url": "",
+  "new_install_prompt_erase": true,
+  "builds": [
+    {
+      "chipFamily": "ESP32-S3",
+      "parts": [
+        { "path": "../releases/firmware.bin", "offset": 65536 }
+      ]
+    }
+  ]
+}
