@@ -58,6 +58,7 @@ struct MicroRadarDisplayState {
   uint8_t uiScale;
   uint8_t aircraftIconScale;
   uint8_t aircraftTextScale;
+  uint8_t aircraftLabelSpacing;
   uint8_t fontStyle;
   uint8_t displayRotation;
   uint8_t labelBackplateOpacity;
@@ -67,6 +68,7 @@ struct MicroRadarDisplayState {
   uint8_t airportLabelScale;
   uint8_t rangeRingStyle;
   uint8_t rangeRingThickness;
+  uint8_t scopeEdgeThickness;
   uint8_t crosshairStyle;
   uint8_t crosshairThickness;
   uint8_t sweepFadeWidthDeg;
@@ -75,6 +77,7 @@ struct MicroRadarDisplayState {
   uint32_t trailColor;
   uint32_t labelColor;
   uint32_t detailLabelColor;
+  uint32_t detailBackgroundColor;
   uint32_t altitudeLabelColor;
   uint32_t speedLabelColor;
   uint32_t landColor;
@@ -89,11 +92,16 @@ struct MicroRadarDisplayState {
   uint32_t mapWaterLineColor;
   uint32_t rangeRingColor;
   uint32_t crosshairColor;
+  uint32_t cardinalLabelColor;
+  uint32_t ordinalLabelColor;
   bool mapEnabled;
   bool airportsEnabled;
   bool airportLabelsEnabled;
   bool rangeRingsEnabled;
   bool outerRangeRingEnabled;
+  bool scopeEdgeEnabled;
+  bool cardinalLabelsEnabled;
+  bool ordinalLabelsEnabled;
   bool rangeRingLabelsEnabled;
   bool crosshairEnabled;
   bool wifiConnected;
@@ -105,7 +113,11 @@ struct MicroRadarDisplayState {
   bool tracking;
   bool touchDetected;
   bool touchActive;
+  bool mapLoading;
   bool rasterBackgroundReady;
+  const uint16_t* rasterBackground;
+  uint32_t rasterBackgroundHash;
+  uint8_t mapBrightness;
   bool detailOpen;
   uint16_t mapSegmentCount;
   uint8_t mapPointCount;

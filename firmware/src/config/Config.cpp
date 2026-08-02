@@ -8,8 +8,7 @@ namespace {
 constexpr const char* kConfigPath = "/config.json";
 constexpr const char* kTempPath = "/config.tmp";
 constexpr const char* kLittleFsPartition = "assets";
-constexpr const char* kDefaultAviationstackAccessKey = "26c1d927027790d770cdf538f7f33533";
-constexpr uint16_t kSupportedSchema = 9;
+constexpr uint16_t kSupportedSchema = 13;
 
 bool mountConfigFs() {
   return LittleFS.begin(true, "/littlefs", 10, kLittleFsPartition);
@@ -52,21 +51,25 @@ bool ConfigManager::begin() {
   config_.locationName = doc["locationName"] | config_.locationName;
   config_.timeZone = doc["timeZone"] | config_.timeZone;
   config_.localReceiverUrl = doc["localReceiverUrl"] | "";
-  config_.aviationstackAccessKey = doc["aviationstackAccessKey"] | config_.aviationstackAccessKey;
-  if (config_.aviationstackAccessKey.isEmpty()) config_.aviationstackAccessKey = kDefaultAviationstackAccessKey;
+  config_.geoapifyApiKey = doc["geoapifyApiKey"] | "";
+  config_.mapBrightness = doc["mapBrightness"] | config_.mapBrightness;
   config_.rangeNm = doc["rangeNm"] | config_.rangeNm;
   config_.mapEnabled = true;
   config_.airportsEnabled = doc["airportsEnabled"] | true;
   config_.airportLabelsEnabled = doc["airportLabelsEnabled"] | config_.airportLabelsEnabled;
   config_.rangeRingsEnabled = doc["rangeRingsEnabled"] | config_.rangeRingsEnabled;
-  config_.outerRangeRingEnabled = doc["outerRangeRingEnabled"] | config_.outerRangeRingEnabled;
+  config_.outerRangeRingEnabled = false;
+  config_.scopeEdgeEnabled = doc["scopeEdgeEnabled"] | config_.scopeEdgeEnabled;
+  config_.cardinalLabelsEnabled = doc["cardinalLabelsEnabled"] | config_.cardinalLabelsEnabled;
+  config_.ordinalLabelsEnabled = doc["ordinalLabelsEnabled"] | config_.ordinalLabelsEnabled;
   config_.trailsEnabled = doc["trailsEnabled"] | true;
   config_.sweepLineEnabled = doc["sweepLineEnabled"] | config_.sweepLineEnabled;
   config_.showGroundAircraft = doc["showGroundAircraft"] | false;
-  config_.labelDensity = doc["labelDensity"] | 5;
-  config_.uiScale = doc["uiScale"] | 100;
+  config_.labelDensity = 10;
+  config_.uiScale = doc["uiScale"] | config_.uiScale;
   config_.aircraftIconScale = doc["aircraftIconScale"] | config_.uiScale;
   config_.aircraftTextScale = doc["aircraftTextScale"] | config_.uiScale;
+  config_.aircraftLabelSpacing = doc["aircraftLabelSpacing"] | config_.aircraftLabelSpacing;
   config_.fontStyle = doc["fontStyle"] | config_.fontStyle;
   config_.displayRotation = doc["displayRotation"] | config_.displayRotation;
   config_.labelBackplateOpacity = doc["labelBackplateOpacity"] | config_.labelBackplateOpacity;
@@ -75,6 +78,7 @@ bool ConfigManager::begin() {
   config_.airportLabelScale = doc["airportLabelScale"] | config_.airportLabelScale;
   config_.rangeRingStyle = doc["rangeRingStyle"] | config_.rangeRingStyle;
   config_.rangeRingThickness = doc["rangeRingThickness"] | config_.rangeRingThickness;
+  config_.scopeEdgeThickness = doc["scopeEdgeThickness"] | config_.scopeEdgeThickness;
   config_.crosshairEnabled = doc["crosshairEnabled"] | config_.crosshairEnabled;
   config_.crosshairStyle = doc["crosshairStyle"] | config_.crosshairStyle;
   config_.crosshairThickness = doc["crosshairThickness"] | config_.crosshairThickness;
@@ -84,6 +88,7 @@ bool ConfigManager::begin() {
   config_.trailColor = doc["trailColor"] | config_.trailColor;
   config_.labelColor = doc["labelColor"] | config_.labelColor;
   config_.detailLabelColor = doc["detailLabelColor"] | config_.detailLabelColor;
+  config_.detailBackgroundColor = doc["detailBackgroundColor"] | config_.detailBackgroundColor;
   config_.altitudeLabelColor = doc["altitudeLabelColor"] | config_.detailLabelColor;
   config_.speedLabelColor = doc["speedLabelColor"] | config_.detailLabelColor;
   config_.landColor = doc["landColor"] | config_.landColor;
@@ -98,11 +103,10 @@ bool ConfigManager::begin() {
   config_.mapWaterLineColor = doc["mapWaterLineColor"] | config_.mapWaterLineColor;
   config_.rangeRingColor = doc["rangeRingColor"] | config_.rangeRingColor;
   config_.crosshairColor = doc["crosshairColor"] | config_.crosshairColor;
+  config_.cardinalLabelColor = doc["cardinalLabelColor"] | config_.labelColor;
+  config_.ordinalLabelColor = doc["ordinalLabelColor"] | config_.labelColor;
   config_.rangeRingLabelsEnabled = doc["rangeRingLabelsEnabled"] | config_.rangeRingLabelsEnabled;
-  config_.brightness = doc["brightness"] | 210;
-  config_.dimBrightness = doc["dimBrightness"] | 70;
-  config_.dimStartHour = doc["dimStartHour"] | 22;
-  config_.dimEndHour = doc["dimEndHour"] | 7;
+  config_.brightness = doc["brightness"] | config_.brightness;
   config_.adminPasswordHash = doc["adminPasswordHash"] | "";
   const char* units = doc["units"] | "nm";
   config_.units = String(units) == "metric" ? Units::Metric : Units::Nautical;
@@ -116,10 +120,11 @@ bool ConfigManager::begin() {
   else if (String(provider) == "opensky") config_.providerMode = ProviderMode::OpenSky;
   else if (String(provider) == "adsb_fi") config_.providerMode = ProviderMode::AdsbFi;
   else config_.providerMode = ProviderMode::Automatic;
-  const char* mapStyle = doc["mapStyle"] | "fr24_dark";
-  if (String(mapStyle) == "radar_dark") config_.mapStyle = MapStyle::RadarDark;
-  else if (String(mapStyle) == "high_contrast") config_.mapStyle = MapStyle::HighContrast;
-  else config_.mapStyle = MapStyle::Fr24Dark;
+  const char* mapStyle = doc["mapStyle"] | "dark_matter";
+  if (String(mapStyle) == "osm_bright_grey" || String(mapStyle) == "fr24_dark") config_.mapStyle = MapStyle::OSMBrightGrey;
+  else if (String(mapStyle) == "osm_bright" || String(mapStyle) == "high_contrast") config_.mapStyle = MapStyle::OSMBright;
+  else if (String(mapStyle) == "positron") config_.mapStyle = MapStyle::Positron;
+  else config_.mapStyle = MapStyle::DarkMatter;
   const char* labelMode = doc["aircraftLabelMode"] | "basic";
   if (String(labelMode) == "callsign") config_.aircraftLabelMode = AircraftLabelMode::CallsignOnly;
   else if (String(labelMode) == "full") config_.aircraftLabelMode = AircraftLabelMode::Full;
@@ -139,7 +144,7 @@ bool ConfigManager::begin() {
     config_.speedLabelColor = 0x168C49;
     config_.airportColor = 0x2AF46F;
     config_.airportLabelColor = 0x2AF46F;
-    config_.mapStyle = MapStyle::RadarDark;
+    config_.mapStyle = MapStyle::DarkMatter;
     config_.schemaVersion = kSupportedSchema;
     saveAtomic(config_);
   }
@@ -198,6 +203,33 @@ bool ConfigManager::begin() {
     config_.schemaVersion = kSupportedSchema;
     saveAtomic(config_);
   }
+  if (loadedSchema < 10) {
+    config_.mapStyle = MapStyle::DarkMatter;
+    config_.mapBrightness = 100;
+    config_.schemaVersion = kSupportedSchema;
+    saveAtomic(config_);
+  }
+  if (loadedSchema < 11) {
+    config_.outerRangeRingEnabled = false;
+    config_.scopeEdgeThickness = 1;
+    config_.detailBackgroundColor = config_.waterColor ? config_.waterColor : 0x011D57;
+    config_.schemaVersion = kSupportedSchema;
+    saveAtomic(config_);
+  }
+  if (loadedSchema < 12) {
+    config_.cardinalLabelsEnabled = true;
+    config_.ordinalLabelsEnabled = false;
+    config_.cardinalLabelColor = config_.labelColor ? config_.labelColor : 0x28F26E;
+    config_.ordinalLabelColor = config_.labelColor ? config_.labelColor : 0x28F26E;
+    config_.schemaVersion = kSupportedSchema;
+    saveAtomic(config_);
+  }
+  if (loadedSchema < 13) {
+    config_.labelDensity = 10;
+    config_.aircraftLabelSpacing = 28;
+    config_.schemaVersion = kSupportedSchema;
+    saveAtomic(config_);
+  }
   if (doc["enabledRangesNm"].is<JsonArray>()) {
     config_.enabledRangesNm.clear();
     for (uint16_t range : doc["enabledRangesNm"].as<JsonArray>()) config_.enabledRangesNm.push_back(range);
@@ -235,12 +267,16 @@ bool ConfigManager::validate(const AppConfig& config, String* error) const {
       return false;
     }
   }
-  if (config.brightness > 255 || config.dimBrightness > 255) {
+  if (config.brightness > 255) {
     if (error) *error = "Brightness is outside valid bounds";
     return false;
   }
+  if (config.mapBrightness > 100) {
+    if (error) *error = "Map brightness is outside valid bounds";
+    return false;
+  }
   if (config.uiScale < 70 || config.uiScale > 140 || config.aircraftIconScale < 70 || config.aircraftIconScale > 160 ||
-      config.aircraftTextScale < 70 || config.aircraftTextScale > 220) {
+      config.aircraftTextScale < 70 || config.aircraftTextScale > 220 || config.aircraftLabelSpacing < 12 || config.aircraftLabelSpacing > 60) {
     if (error) *error = "UI scale is outside valid bounds";
     return false;
   }
@@ -276,6 +312,10 @@ bool ConfigManager::validate(const AppConfig& config, String* error) const {
     if (error) *error = "Range ring thickness is outside valid bounds";
     return false;
   }
+  if (config.scopeEdgeThickness < 1 || config.scopeEdgeThickness > 5) {
+    if (error) *error = "Scope edge thickness is outside valid bounds";
+    return false;
+  }
   if (config.crosshairStyle > 1) {
     if (error) *error = "Crosshair style is outside valid bounds";
     return false;
@@ -309,20 +349,25 @@ bool ConfigManager::saveAtomic(const AppConfig& config) {
   doc["locationName"] = config.locationName;
   doc["timeZone"] = config.timeZone;
   doc["localReceiverUrl"] = config.localReceiverUrl;
-  doc["aviationstackAccessKey"] = config.aviationstackAccessKey;
+  doc["geoapifyApiKey"] = config.geoapifyApiKey;
+  doc["mapBrightness"] = config.mapBrightness;
   doc["rangeNm"] = config.rangeNm;
   doc["mapEnabled"] = config.mapEnabled;
   doc["airportsEnabled"] = config.airportsEnabled;
   doc["airportLabelsEnabled"] = config.airportLabelsEnabled;
   doc["rangeRingsEnabled"] = config.rangeRingsEnabled;
-  doc["outerRangeRingEnabled"] = config.outerRangeRingEnabled;
+  doc["outerRangeRingEnabled"] = false;
+  doc["scopeEdgeEnabled"] = config.scopeEdgeEnabled;
+  doc["cardinalLabelsEnabled"] = config.cardinalLabelsEnabled;
+  doc["ordinalLabelsEnabled"] = config.ordinalLabelsEnabled;
   doc["trailsEnabled"] = config.trailsEnabled;
   doc["sweepLineEnabled"] = config.sweepLineEnabled;
   doc["showGroundAircraft"] = config.showGroundAircraft;
-  doc["labelDensity"] = config.labelDensity;
+  doc["labelDensity"] = 10;
   doc["uiScale"] = config.uiScale;
   doc["aircraftIconScale"] = config.aircraftIconScale;
   doc["aircraftTextScale"] = config.aircraftTextScale;
+  doc["aircraftLabelSpacing"] = config.aircraftLabelSpacing;
   doc["fontStyle"] = config.fontStyle;
   doc["displayRotation"] = config.displayRotation;
   doc["labelBackplateOpacity"] = config.labelBackplateOpacity;
@@ -331,6 +376,7 @@ bool ConfigManager::saveAtomic(const AppConfig& config) {
   doc["airportLabelScale"] = config.airportLabelScale;
   doc["rangeRingStyle"] = config.rangeRingStyle;
   doc["rangeRingThickness"] = config.rangeRingThickness;
+  doc["scopeEdgeThickness"] = config.scopeEdgeThickness;
   doc["crosshairEnabled"] = config.crosshairEnabled;
   doc["crosshairStyle"] = config.crosshairStyle;
   doc["crosshairThickness"] = config.crosshairThickness;
@@ -340,6 +386,7 @@ bool ConfigManager::saveAtomic(const AppConfig& config) {
   doc["trailColor"] = config.trailColor;
   doc["labelColor"] = config.labelColor;
   doc["detailLabelColor"] = config.detailLabelColor;
+  doc["detailBackgroundColor"] = config.detailBackgroundColor;
   doc["altitudeLabelColor"] = config.altitudeLabelColor;
   doc["speedLabelColor"] = config.speedLabelColor;
   doc["landColor"] = config.landColor;
@@ -354,11 +401,10 @@ bool ConfigManager::saveAtomic(const AppConfig& config) {
   doc["mapWaterLineColor"] = config.mapWaterLineColor;
   doc["rangeRingColor"] = config.rangeRingColor;
   doc["crosshairColor"] = config.crosshairColor;
+  doc["cardinalLabelColor"] = config.cardinalLabelColor;
+  doc["ordinalLabelColor"] = config.ordinalLabelColor;
   doc["rangeRingLabelsEnabled"] = config.rangeRingLabelsEnabled;
   doc["brightness"] = config.brightness;
-  doc["dimBrightness"] = config.dimBrightness;
-  doc["dimStartHour"] = config.dimStartHour;
-  doc["dimEndHour"] = config.dimEndHour;
   doc["adminPasswordHash"] = config.adminPasswordHash;
   doc["units"] = config.units == Units::Metric ? "metric" : "nm";
   doc["theme"] = config.theme == ThemeMode::Light ? "light" : config.theme == ThemeMode::Dark ? "dark" : "auto";
@@ -368,7 +414,9 @@ bool ConfigManager::saveAtomic(const AppConfig& config) {
                             : config.providerMode == ProviderMode::OpenSky       ? "opensky"
                             : config.providerMode == ProviderMode::AdsbFi        ? "adsb_fi"
                                                                                   : "auto";
-  doc["mapStyle"] = config.mapStyle == MapStyle::RadarDark ? "radar_dark" : config.mapStyle == MapStyle::HighContrast ? "high_contrast" : "fr24_dark";
+  doc["mapStyle"] = config.mapStyle == MapStyle::OSMBrightGrey
+                        ? "osm_bright_grey"
+                        : config.mapStyle == MapStyle::OSMBright ? "osm_bright" : config.mapStyle == MapStyle::Positron ? "positron" : "dark_matter";
   doc["aircraftLabelMode"] = config.aircraftLabelMode == AircraftLabelMode::CallsignOnly
                                  ? "callsign"
                                  : config.aircraftLabelMode == AircraftLabelMode::Full ? "full" : config.aircraftLabelMode == AircraftLabelMode::Off ? "off" : "basic";

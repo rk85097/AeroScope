@@ -339,16 +339,20 @@ void RadarUi::tick() {
       state.airportsEnabled = cfg.airportsEnabled;
       state.airportLabelsEnabled = cfg.airportLabelsEnabled;
       state.rangeRingsEnabled = cfg.rangeRingsEnabled;
-      state.outerRangeRingEnabled = cfg.outerRangeRingEnabled;
+      state.outerRangeRingEnabled = false;
+      state.scopeEdgeEnabled = cfg.scopeEdgeEnabled;
+      state.cardinalLabelsEnabled = cfg.cardinalLabelsEnabled;
+      state.ordinalLabelsEnabled = cfg.ordinalLabelsEnabled;
       state.rangeRingLabelsEnabled = cfg.rangeRingLabelsEnabled;
       state.metricUnits = cfg.units == Units::Metric;
       state.lightTheme = cfg.theme == ThemeMode::Light;
       state.trailsEnabled = cfg.trailsEnabled;
       state.sweepLineEnabled = cfg.sweepLineEnabled;
-      state.labelDensity = cfg.labelDensity;
+      state.labelDensity = 10;
       state.uiScale = cfg.uiScale;
       state.aircraftIconScale = cfg.aircraftIconScale;
       state.aircraftTextScale = cfg.aircraftTextScale;
+      state.aircraftLabelSpacing = cfg.aircraftLabelSpacing;
       state.fontStyle = cfg.fontStyle;
       state.displayRotation = cfg.displayRotation;
       state.labelBackplateOpacity = cfg.labelBackplateOpacity;
@@ -358,6 +362,7 @@ void RadarUi::tick() {
       state.airportLabelScale = cfg.airportLabelScale;
       state.rangeRingStyle = cfg.rangeRingStyle;
       state.rangeRingThickness = cfg.rangeRingThickness;
+      state.scopeEdgeThickness = cfg.scopeEdgeThickness;
       state.crosshairEnabled = cfg.crosshairEnabled;
       state.crosshairStyle = cfg.crosshairStyle;
       state.crosshairThickness = cfg.crosshairThickness;
@@ -367,6 +372,7 @@ void RadarUi::tick() {
       state.trailColor = cfg.trailColor;
       state.labelColor = cfg.labelColor;
       state.detailLabelColor = cfg.detailLabelColor;
+      state.detailBackgroundColor = cfg.detailBackgroundColor;
       state.altitudeLabelColor = cfg.altitudeLabelColor;
       state.speedLabelColor = cfg.speedLabelColor;
       state.landColor = cfg.landColor;
@@ -381,9 +387,16 @@ void RadarUi::tick() {
       state.mapWaterLineColor = cfg.mapWaterLineColor;
       state.rangeRingColor = cfg.rangeRingColor;
       state.crosshairColor = cfg.crosshairColor;
+      state.cardinalLabelColor = cfg.cardinalLabelColor;
+      state.ordinalLabelColor = cfg.ordinalLabelColor;
       state.mapStyle = static_cast<uint8_t>(cfg.mapStyle);
       state.aircraftLabelMode = static_cast<uint8_t>(cfg.aircraftLabelMode);
-      state.rasterBackgroundReady = false;
+      state.rasterBackgroundReady = maps_ && maps_->hasRasterBackground();
+      state.rasterBackground = state.rasterBackgroundReady ? maps_->rasterBackground() : nullptr;
+      state.rasterBackgroundHash = state.rasterBackgroundReady ? maps_->rasterBackgroundHash() : 0;
+      state.mapLoading = maps_ && cfg.mapEnabled &&
+                         (maps_->isRefreshing() || !maps_->isCurrentForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm, cfg.mapStyle));
+      state.mapBrightness = cfg.mapBrightness;
       if (maps_ && cfg.mapEnabled) {
         const bool mapScopeChanged = fabs(cfg.homeLat - cachedMapLat) > 0.000001 || fabs(cfg.homeLon - cachedMapLon) > 0.000001 ||
                                      cfg.rangeNm != cachedMapRange || cfg.mapEnabled != cachedMapEnabled ||

@@ -3,6 +3,7 @@
 #include <Arduino.h>
 #include <vector>
 
+#include "config/Config.h"
 #include "geo/Geo.h"
 
 namespace micro_radar {
@@ -60,10 +61,17 @@ class MapPackageManager {
   bool validatePackage(const String& manifestJson, const String& payloadPath, String* error);
   bool activateValidatedPackage(const String& packageId);
   bool retryDownloadForLocation(double centerLat, double centerLon, uint16_t radiusNm);
+  bool retryDownloadForLocation(double centerLat, double centerLon, uint16_t radiusNm, const String& geoapifyApiKey, MapStyle style);
   bool ensureLocalSeedForLocation(double centerLat, double centerLon, uint16_t radiusNm);
-  bool deleteCache();
   bool hasRasterBackground() const;
+  const uint16_t* rasterBackground() const;
+  uint32_t rasterBackgroundHash() const;
+  bool isRefreshing() const;
+  void setRefreshing(bool refreshing);
+  size_t pointCount() const;
+  bool refreshAirportPointsForLocation(double centerLat, double centerLon, uint16_t radiusNm, const String& geoapifyApiKey);
   bool isCurrentForLocation(double centerLat, double centerLon, uint16_t radiusNm) const;
+  bool isCurrentForLocation(double centerLat, double centerLon, uint16_t radiusNm, MapStyle style) const;
   String statusText() const;
   std::vector<ProjectedMapSegment> projectSegments(geo::Location origin, uint16_t rangeNm, size_t maxSegments) const;
   std::vector<ProjectedMapPoint> projectPoints(geo::Location origin, uint16_t rangeNm, size_t maxPoints) const;
@@ -72,6 +80,8 @@ class MapPackageManager {
  private:
   bool loadActivePackage();
   bool saveActivePackage(double centerLat, double centerLon, uint16_t radiusNm);
+  bool fetchStaticRasterMap(double centerLat, double centerLon, uint16_t radiusNm, const String& geoapifyApiKey, MapStyle style);
+  void fetchGeoapifyAirports(double centerLat, double centerLon, uint16_t radiusNm, const String& geoapifyApiKey);
   void loadEastMedSeedIfApplicable(double centerLat, double centerLon);
 
   bool active_ {false};
@@ -79,10 +89,14 @@ class MapPackageManager {
   double activeCenterLat_ {999.0};
   double activeCenterLon_ {999.0};
   uint16_t activeRadiusNm_ {0};
+  MapStyle activeStyle_ {MapStyle::DarkMatter};
   String status_ {"radar-only: no active package"};
   String packageId_;
   String version_;
   String attribution_;
+  uint16_t* rasterBackground_ {nullptr};
+  uint32_t rasterHash_ {0};
+  volatile bool refreshing_ {false};
   std::vector<MapLineSegment> segments_;
   std::vector<MapPoint> points_;
 };

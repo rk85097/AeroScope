@@ -15,6 +15,7 @@ constexpr uint32_t kTlsBackgroundFreeHeap = 70000;
 constexpr uint32_t kTlsBackgroundMaxBlock = 42000;
 constexpr uint32_t kProviderMinFreeHeap = 46000;
 constexpr uint32_t kProviderLowHeapBackoffMs = 9000;
+constexpr const char* kSetupApSsid = "AeroScope-Setup";
 
 String compactCallsign(String callsign) {
   callsign.trim();
@@ -37,35 +38,6 @@ String urlEncode(const String& value) {
     }
   }
   return encoded;
-}
-
-String iataFlightFromCallsign(const String& callsign) {
-  String compact = compactCallsign(callsign);
-  if (compact.length() < 4) return "";
-  const String prefix = compact.substring(0, 3);
-  const String number = compact.substring(3);
-  for (size_t i = 0; i < number.length(); ++i) {
-    if (!isDigit(number[i])) return "";
-  }
-  struct AirlineMap {
-    const char* icao;
-    const char* iata;
-  };
-  static const AirlineMap kAirlines[] = {
-      {"ELY", "LY"}, {"AIZ", "IZ"}, {"ISR", "6H"}, {"BBG", "BZ"}, {"RYR", "FR"}, {"WZZ", "W6"}, {"EZY", "U2"},
-      {"DLH", "LH"}, {"BAW", "BA"}, {"AFR", "AF"}, {"KLM", "KL"}, {"THY", "TK"}, {"UAE", "EK"}, {"ETD", "EY"},
-      {"QTR", "QR"}, {"DAL", "DL"}, {"UAL", "UA"}, {"AAL", "AA"}, {"SWR", "LX"}, {"SAS", "SK"}};
-  for (const auto& airline : kAirlines) {
-    if (prefix == airline.icao) return String(airline.iata) + number;
-  }
-  return "";
-}
-
-String aviationstackFlightFilter(const String& callsign) {
-  const String compact = compactCallsign(callsign);
-  const String iata = iataFlightFromCallsign(compact);
-  if (!iata.isEmpty()) return "flight_iata=" + urlEncode(iata);
-  return "flight_icao=" + urlEncode(compact);
 }
 
 String airportCode(JsonObjectConst airport) {
@@ -331,64 +303,6 @@ bool fetchRouteEnrichment(const Aircraft& source, Aircraft* enrichment, uint16_t
   return true;
 }
 
-bool fetchAviationstackRouteEnrichment(const Aircraft& source, const String& accessKey, Aircraft* enrichment, uint16_t timeoutMs = 1400) {
-  if (!enrichment || accessKey.isEmpty() || !source.callsign.available()) return false;
-  static uint32_t blockedUntilMs = 0;
-  if (blockedUntilMs != 0 && millis() < blockedUntilMs) return false;
-  const String callsign = compactCallsign(source.callsign.value);
-  const String filter = aviationstackFlightFilter(callsign);
-  if (callsign.length() < 3 || filter.isEmpty()) return false;
-
-  WiFiClient client;
-  HTTPClient http;
-  http.setTimeout(timeoutMs);
-  http.setReuse(false);
-  const String url = "http://api.aviationstack.com/v1/flights?access_key=" + urlEncode(accessKey) + "&" + filter + "&limit=1";
-  if (!http.begin(client, url)) return false;
-  const int code = http.GET();
-  if (code != 200) {
-    Serial.printf("Aviationstack HTTP %d: %s\n", code, callsign.c_str());
-    if (code == 401 || code == 403) blockedUntilMs = millis() + 600000UL;
-    http.end();
-    return false;
-  }
-  Stream& stream = http.getStream();
-  JsonDocument doc;
-  const DeserializationError err = deserializeJson(doc, stream);
-  http.end();
-
-  if (err != DeserializationError::Ok) {
-    Serial.printf("Aviationstack JSON failed: %s\n", callsign.c_str());
-    return false;
-  }
-  JsonObjectConst first = doc["data"][0].as<JsonObjectConst>();
-  if (first.isNull()) {
-    Serial.printf("Aviationstack empty: %s\n", callsign.c_str());
-    return false;
-  }
-  const String airline = first["airline"]["name"] | "";
-  String origin = first["departure"]["icao"] | "";
-  if (origin.isEmpty()) origin = first["departure"]["iata"] | "";
-  String destination = first["arrival"]["icao"] | "";
-  if (destination.isEmpty()) destination = first["arrival"]["iata"] | "";
-  const String registration = first["aircraft"]["registration"] | "";
-  const String typeCode = first["aircraft"]["icao"] | "";
-  const String iataType = first["aircraft"]["iata"] | "";
-  if (airline.isEmpty() && origin.isEmpty() && destination.isEmpty() && registration.isEmpty() && typeCode.isEmpty() && iataType.isEmpty()) {
-    Serial.printf("Aviationstack no useful fields: %s\n", callsign.c_str());
-    return false;
-  }
-  enrichment->icao24 = source.icao24;
-  enrichment->callsign = source.callsign;
-  if (!airline.isEmpty()) enrichment->airlineName = {airline, FieldState::ProviderSupplied};
-  if (!origin.isEmpty()) enrichment->routeOrigin = {origin, FieldState::ProviderSupplied};
-  if (!destination.isEmpty()) enrichment->routeDestination = {destination, FieldState::ProviderSupplied};
-  if (!registration.isEmpty()) enrichment->registration = {registration, FieldState::ProviderSupplied};
-  if (!typeCode.isEmpty()) enrichment->typeCode = {typeCode, FieldState::ProviderSupplied};
-  else if (!iataType.isEmpty()) enrichment->modelName = {iataType, FieldState::ProviderSupplied};
-  Serial.printf("Aviationstack ok: %s %s %s>%s\n", callsign.c_str(), airline.c_str(), origin.c_str(), destination.c_str());
-  return true;
-}
 }  // namespace
 
 void Application::begin() {
@@ -401,25 +315,27 @@ void Application::begin() {
   WiFi.persistent(false);
   WiFi.setSleep(false);
   WiFi.setAutoReconnect(true);
+  WiFi.mode(WIFI_OFF);
+  delay(150);
+  WiFi.softAPdisconnect(true);
+  WiFi.disconnect(false, false);
+  delay(50);
   if (!cfg.wifiSsid.isEmpty()) {
     WiFi.mode(WIFI_AP_STA);
-    WiFi.softAP("AeroScope-Setup");
-    WiFi.disconnect(false, false);
+    const bool apOk = WiFi.softAP(kSetupApSsid);
+    Serial.printf("Setup AP %s: %s, IP: %s, MAC: %s\n", kSetupApSsid, apOk ? "started" : "failed", WiFi.softAPIP().toString().c_str(), WiFi.softAPmacAddress().c_str());
     WiFi.begin(cfg.wifiSsid.c_str(), cfg.wifiPassword.c_str());
     Serial.printf("Wi-Fi station starting: %s\n", cfg.wifiSsid.c_str());
   } else {
     WiFi.mode(WIFI_AP);
-    const bool apOk = WiFi.softAP("AeroScope-Setup");
-    Serial.printf("Setup AP %s, IP: %s\n", apOk ? "started" : "failed", WiFi.softAPIP().toString().c_str());
+    const bool apOk = WiFi.softAP(kSetupApSsid);
+    Serial.printf("Setup AP %s: %s, IP: %s, MAC: %s\n", kSetupApSsid, apOk ? "started" : "failed", WiFi.softAPIP().toString().c_str(), WiFi.softAPmacAddress().c_str());
   }
 
   Serial.println("Application.begin: radar");
   radar_.configure(cfg);
   Serial.println("Application.begin: maps");
   maps_.begin();
-  if (cfg.mapEnabled && !maps_.isCurrentForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm)) {
-    maps_.ensureLocalSeedForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm);
-  }
   Serial.println("Application.begin: providers");
   providers_.begin();
   providers_.configure(cfg.providerMode, cfg.localReceiverUrl);
@@ -431,7 +347,7 @@ void Application::begin() {
   Serial.println("Application.begin: provider task");
   xTaskCreatePinnedToCore(providerTaskEntry, "provider", 7168, this, 1, &providerTaskHandle_, 0);
   Serial.println("Application.begin: map task");
-  xTaskCreatePinnedToCore(mapTaskEntry, "map", 6144, this, 0, &mapTaskHandle_, 1);
+  xTaskCreatePinnedToCore(mapTaskEntry, "map", 12288, this, 0, &mapTaskHandle_, 1);
   Serial.println("Application.begin: enrichment task");
   xTaskCreatePinnedToCore(enrichmentTaskEntry, "enrich", 10240, this, 0, &enrichmentTaskHandle_, 0);
 }
@@ -455,29 +371,76 @@ void Application::enrichmentTaskEntry(void* arg) {
 
 void Application::mapTask() {
   uint32_t lastAttemptMs = 0;
+  uint32_t lastAirportAttemptMs = 0;
+  uint32_t lastWifiWaitLogMs = 0;
   double lastLat = 999.0;
   double lastLon = 999.0;
   uint16_t lastRange = 0;
+  double lastAirportLat = 999.0;
+  double lastAirportLon = 999.0;
+  uint16_t lastAirportRange = 0;
   while (true) {
     const AppConfig cfg = config_.get();
     const bool scopeChanged = fabs(cfg.homeLat - lastLat) > 0.000001 || fabs(cfg.homeLon - lastLon) > 0.000001 || cfg.rangeNm != lastRange;
     const uint32_t retryDelayMs = scopeChanged ? 0 : 10000;
-    const bool currentMap = maps_.isCurrentForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm);
+    const bool currentMap = maps_.isCurrentForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm, cfg.mapStyle);
     const bool needsMap = !maps_.hasActivePackage() || !currentMap;
+    const bool airportScopeChanged = fabs(cfg.homeLat - lastAirportLat) > 0.000001 || fabs(cfg.homeLon - lastAirportLon) > 0.000001 ||
+                                     cfg.rangeNm != lastAirportRange;
+    const bool needsAirportPoints = cfg.mapEnabled && cfg.airportsEnabled && currentMap && maps_.pointCount() == 0 && !cfg.geoapifyApiKey.isEmpty() &&
+                                    (airportScopeChanged || millis() - lastAirportAttemptMs >= 60000);
     if (cfg.mapEnabled && needsMap && millis() - lastAttemptMs >= retryDelayMs) {
+      maps_.setRefreshing(true);
+      if (WiFi.status() != WL_CONNECTED) {
+        if (millis() - lastWifiWaitLogMs >= 5000) {
+          lastWifiWaitLogMs = millis();
+          Serial.printf("Map task: waiting for Wi-Fi before map refresh status=%s(%d)\n", wifiStatusName(WiFi.status()),
+                        static_cast<int>(WiFi.status()));
+        }
+        vTaskDelay(pdMS_TO_TICKS(500));
+        continue;
+      }
       lastAttemptMs = millis();
       lastLat = cfg.homeLat;
       lastLon = cfg.homeLon;
       lastRange = cfg.rangeNm;
-      Serial.printf("Map task: refreshing vector map active=%d current=%d\n", maps_.hasActivePackage(), currentMap);
+      Serial.printf("Map task: refreshing static map active=%d current=%d\n", maps_.hasActivePackage(), currentMap);
       if (networkMutex_ && xSemaphoreTake(networkMutex_, pdMS_TO_TICKS(1500)) != pdTRUE) {
         Serial.println("Map task: network busy, retry later");
         vTaskDelay(pdMS_TO_TICKS(500));
         continue;
       }
-      maps_.retryDownloadForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm);
+      maps_.retryDownloadForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm, cfg.geoapifyApiKey, cfg.mapStyle);
       if (networkMutex_) xSemaphoreGive(networkMutex_);
+      maps_.setRefreshing(false);
       Serial.println("Map task: " + maps_.statusText());
+    } else if (needsAirportPoints) {
+      maps_.setRefreshing(true);
+      if (WiFi.status() != WL_CONNECTED) {
+        if (millis() - lastWifiWaitLogMs >= 5000) {
+          lastWifiWaitLogMs = millis();
+          Serial.printf("Map task: waiting for Wi-Fi before airport refresh status=%s(%d)\n", wifiStatusName(WiFi.status()),
+                        static_cast<int>(WiFi.status()));
+        }
+        vTaskDelay(pdMS_TO_TICKS(500));
+        continue;
+      }
+      lastAirportLat = cfg.homeLat;
+      lastAirportLon = cfg.homeLon;
+      lastAirportRange = cfg.rangeNm;
+      Serial.println("Map task: refreshing airport points for current map");
+      if (networkMutex_ && xSemaphoreTake(networkMutex_, pdMS_TO_TICKS(1500)) != pdTRUE) {
+        Serial.println("Map task: network busy, airport retry later");
+        vTaskDelay(pdMS_TO_TICKS(500));
+        continue;
+      }
+      lastAirportAttemptMs = millis();
+      maps_.refreshAirportPointsForLocation(cfg.homeLat, cfg.homeLon, cfg.rangeNm, cfg.geoapifyApiKey);
+      if (networkMutex_) xSemaphoreGive(networkMutex_);
+      maps_.setRefreshing(false);
+      Serial.println("Map task: airport points=" + String(maps_.pointCount()));
+    } else {
+      maps_.setRefreshing(false);
     }
     vTaskDelay(pdMS_TO_TICKS(500));
   }

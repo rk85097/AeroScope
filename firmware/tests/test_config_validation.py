@@ -10,7 +10,7 @@ def validate_config(config):
         return False
     if any(r not in VALID_RANGES for r in config["enabledRangesNm"]):
         return False
-    return 0 <= config["brightness"] <= 255 and 0 <= config["dimBrightness"] <= 255
+    return 0 <= config["brightness"] <= 255
 
 
 def test_config_accepts_default_operational_values():
@@ -19,8 +19,7 @@ def test_config_accepts_default_operational_values():
             "homeLat": 32.0853,
             "homeLon": 34.7818,
             "enabledRangesNm": [5, 10, 20, 40, 80, 160, 320],
-            "brightness": 210,
-            "dimBrightness": 70,
+            "brightness": 255,
         }
     )
 
@@ -31,8 +30,7 @@ def test_config_rejects_invalid_coordinates_and_ranges():
             "homeLat": 120,
             "homeLon": 34.0,
             "enabledRangesNm": [20],
-            "brightness": 210,
-            "dimBrightness": 70,
+            "brightness": 255,
         }
     )
     assert not validate_config(
@@ -40,7 +38,6 @@ def test_config_rejects_invalid_coordinates_and_ranges():
             "homeLat": 32,
             "homeLon": 34,
             "enabledRangesNm": [15],
-            "brightness": 210,
-            "dimBrightness": 70,
+            "brightness": 255,
         }
     )
