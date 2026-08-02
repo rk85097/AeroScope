@@ -356,8 +356,8 @@ const char kEmbeddedPanel[] PROGMEM = R"HTML(
         <div><button type="button" onclick="saveWifi()">Save Wi-Fi</button></div>
       </div></section>
       <section><h2>Location</h2><div class="stack">
-        <div class="row"><label>Latitude</label><input id="lat" name="lat" type="number" step="0.000001" inputmode="decimal" required></div>
-        <div class="row"><label>Longitude</label><input id="lon" name="lon" type="number" step="0.000001" inputmode="decimal" required></div>
+        <div class="row"><label>Latitude</label><input id="lat" name="lat" type="text" inputmode="text" pattern="^-?[0-9]+(\.[0-9]+)?$" placeholder="-90 to 90" required></div>
+        <div class="row"><label>Longitude</label><input id="lon" name="lon" type="text" inputmode="text" pattern="^-?[0-9]+(\.[0-9]+)?$" placeholder="-180 to 180" required></div>
         <div class="row"><label>Time Zone</label><input id="timezone" name="timezone" value="Asia/Jerusalem"></div>
         <div><button type="button" onclick="applyLocation()">Apply Location</button></div>
         <p class="hint">Location changes save only when you press Apply Location.</p>
