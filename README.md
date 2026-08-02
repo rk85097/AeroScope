@@ -63,11 +63,11 @@ python -m esptool --chip esp32s3 --port YOUR_PORT --baud 921600 write_flash 0x10
 Examples:
 
 ```powershell
-python -m esptool --chip esp32s3 --port COM15 --baud 921600 write_flash 0x10000 firmware.bin
+POWERSHELL: python -m esptool --chip esp32s3 --port COM15 --baud 921600 write_flash 0x10000 firmware.bin
 ```
 
 ```bash
-python -m esptool --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 write_flash 0x10000 firmware.bin
+BASH: python -m esptool --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 write_flash 0x10000 firmware.bin
 ```
 
 7. Press **RESET** after flashing.
