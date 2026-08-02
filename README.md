@@ -5,8 +5,7 @@ AeroScope turns an ESP32-S3 round touch display into a small live aircraft radar
 The idea came from looking at existing aircraft-radar display projects: some were very simple and hobby-looking, while others were polished but expensive. This project aims for the middle point: good-looking, useful, and affordable.
 
 <p align="left">
-  <img src="docs/assets/1.jpg" alt="S1" height="300">
-  <img src="docs/assets/4.jpg" alt="S4" height="300">
+  <img src="docs/assets/IMG_3770.jpg" alt="S1" width="400">
 </p>
 
 
@@ -18,7 +17,7 @@ Required:
 - [ESP32-S3 LCD Driver Board / 2.8 captive touchscreen](https://he.aliexpress.com/item/1005007354066395.html)
 
 Choose the N8R8 2.8-inch round capacitive touch variant:<br>
-<img src="docs/assets/hardware-variant.png" alt="S4" height="300">
+<img src="docs/assets/hardware-variant.png" alt="S4" width="400">
 
 
 Optional:
