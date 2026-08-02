@@ -60,16 +60,6 @@ python -m pip install esptool
 python -m esptool --chip esp32s3 --port YOUR_PORT --baud 921600 write_flash 0x10000 firmware.bin
 ```
 
-Examples:
-
-```powershell
-POWERSHELL: python -m esptool --chip esp32s3 --port COM15 --baud 921600 write_flash 0x10000 firmware.bin
-```
-
-```bash
-BASH: python -m esptool --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 write_flash 0x10000 firmware.bin
-```
-
 7. Press **RESET** after flashing.
 
 The screen should boot into AeroScope.
