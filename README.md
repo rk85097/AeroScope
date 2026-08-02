@@ -23,7 +23,7 @@ Choose the N8R8 2.8-inch round capacitive touch variant:<br>
 
 Optional:
 
-- 3D printed table mount: [`releases/firmware.bin`](docs/assets/AeroScopeMount.3mf)
+- 3D printed table mount: [`releases/AeroScopeMount.3mf`](docs/assets/AeroScopeMount.3mf)
 - The current mount is based on an existing model (not by me) that works, but it can probably be improved by contributors.
 
 ## Install Firmware
