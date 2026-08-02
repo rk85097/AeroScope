@@ -4,21 +4,27 @@ AeroScope turns an ESP32-S3 round touch display into a small live aircraft radar
 
 The idea came from looking at existing aircraft-radar display projects: some were very simple and hobby-looking, while others were polished but expensive. This project aims for the middle point: good-looking, useful, and affordable.
 
+<p align="left">
+  <img src="docs/assets/1.jpg" alt="S1" height="300">
+  <img src="docs/assets/4.jpg" alt="S4" height="300">
+</p>
+
+
+
 ## Hardware
 
 Required:
 
-- **ESP32-S3 LCD Driver Board RGB/SPI N8R8 40PIN/18PIN Connector WIFI Bluetooth LE For 2.8 Captive TouchScreen Display**
-- AliExpress listing: [ESP32-S3 LCD Driver Board / 2.8 captive touchscreen](https://he.aliexpress.com/item/1005007354066395.html)
+- [ESP32-S3 LCD Driver Board / 2.8 captive touchscreen](https://he.aliexpress.com/item/1005007354066395.html)
 
-Choose the N8R8 2.8-inch round capacitive touch variant:
+Choose the N8R8 2.8-inch round capacitive touch variant:<br>
+<img src="docs/assets/hardware-variant.png" alt="S4" height="300">
 
-![Required AliExpress hardware variant](docs/assets/hardware-variant.png)
 
 Optional:
 
-- 3D printed table mount: `TODO: add model link`
-- The current mount is based on an existing model that works, but it can probably be improved by contributors.
+- 3D printed table mount: [`releases/AeroScopeMount.3mf`](docs/assets/AeroScopeMount.3mf)
+- The mount is based on an [existing model](https://makerworld.com/en/models/2872376-esp32-plane-radar-live-ads-b-on-a-round-display#profileId-3207083) which I modified a bit, but it can probably be improved by contributors.
 
 ## Install Firmware
 
@@ -28,7 +34,7 @@ Download the latest firmware binary:
 
 Then flash it with `esptool.py`.
 
-1. Install Python 3.
+1. Install [Python 3](https://www.python.org/downloads/)
 2. Install esptool:
 
 ```bash
@@ -52,16 +58,6 @@ python -m pip install esptool
 
 ```bash
 python -m esptool --chip esp32s3 --port YOUR_PORT --baud 921600 write_flash 0x10000 firmware.bin
-```
-
-Examples:
-
-```powershell
-python -m esptool --chip esp32s3 --port COM15 --baud 921600 write_flash 0x10000 firmware.bin
-```
-
-```bash
-python -m esptool --chip esp32s3 --port /dev/ttyUSB0 --baud 921600 write_flash 0x10000 firmware.bin
 ```
 
 7. Press **RESET** after flashing.
