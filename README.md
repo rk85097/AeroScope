@@ -77,13 +77,13 @@ AeroScope-Setup
 http://192.168.4.1
 ```
 
-In the control panel, go to "Setup" tab, and set at minimum the following:
+In the control panel set at minimum the following:
 
-**In setup tab:**
+**In Setup tab:**
 - Wi-Fi network name and password.
 - Your latitude and longitude (you can learn your lat/lon from [here](https://www.latlong.net/my-location-latitude-longitude))
   
-**In preferences tab:**
+**In Preferences tab:**
 - Geoapify API key for map images and airport markers (see next section for info).
 
 ### Map API Key
