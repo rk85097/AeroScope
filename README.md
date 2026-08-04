@@ -52,7 +52,7 @@ python -m pip install esptool
 - macOS: usually `/dev/cu.usbmodem*` or `/dev/cu.usbserial*`.
 - Linux: usually `/dev/ttyUSB0` or `/dev/ttyACM0`.
 
-6. Flash the firmware:
+6. Flash the firmware (replace YOUR_PORT with the USB port you are using):
 
 ```bash
 python -m esptool --chip esp32s3 --port YOUR_PORT --baud 921600 write_flash 0x10000 firmware.bin
