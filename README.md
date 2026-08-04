@@ -1,8 +1,8 @@
-# AeroScope
+# Desktop Airspace
 
 **NOTE: This project is intended solely as a desktop gadget and must not be used for real-world flight navigation or operational decision-making.**
 
-AeroScope turns an ESP32-S3 round touch display into a small live **aircraft radar desktop gadget**. It shows nearby aircraft over a static map, radar range controls, aircraft trails, airport markers, and a touch details page with flight/aircraft information.
+Desktop Airspace turns an ESP32-S3 round touch display into a small live **aircraft radar desktop gadget**. It shows nearby aircraft over a static map, radar range controls, aircraft trails, airport markers, and a touch details page with flight/aircraft information.
 
 The idea came from looking at existing aircraft-radar display projects: some were very simple and hobby-looking, while others were polished but expensive. This project aims for the middle point: good-looking, useful, and affordable.
 
@@ -62,7 +62,7 @@ python -m esptool --chip esp32s3 --port YOUR_PORT --baud 921600 write_flash 0x10
 
 7. Press **RESET** after flashing.
 
-The screen should boot into AeroScope.
+The screen should boot into Desktop Airspace.
 
 ## First Setup
 
@@ -90,12 +90,12 @@ In the control panel set at minimum the following:
 
 ### Map API Key
 
-AeroScope uses [Geoapify](https://myprojects.geoapify.com/register) for the radar map background and airport markers.
+Desktop Airspace uses [Geoapify](https://myprojects.geoapify.com/register) for the radar map background and airport markers.
 
 To enable it:
 
 1. Create a Geoapify account using **FREE** plan and create an API key.
-3. Open the AeroScope control panel.
+3. Open the Desktop Airspace control panel.
 4. Go to **Preferences** / **Map** and paste the key into **Geoapify API Key**.
 
 ## Use
