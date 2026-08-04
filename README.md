@@ -40,7 +40,7 @@ python -m pip install esptool
 ```
 
 3. Connect the radar board to your computer with USB-C.
-4. Put the board into boot mode (There are only 2 buttons on the board, one for BOOT and one for RESET):
+4. Put the board into boot mode (there are only 2 buttons on the board, one for BOOT and one for RESET):
 
 - Hold **BOOT**.
 - Tap **RESET** once.
@@ -71,20 +71,20 @@ The screen should boot into AeroScope.
 AeroScope-Setup
 ```
 
-3. Open the control panel:
+3. Open the control panel (via any browser):
 
 ```text
 http://192.168.4.1
 ```
 
-In the control panel, set at minimum:
+In the control panel, go to "Setup" tab, and set at minimum the following:
 
+**In setup tab:**
 - Wi-Fi network name and password.
-- Home latitude and longitude.
-- Geoapify API key for map images and airport markers.
-- Preferred range and display options.
-
-The setup Wi-Fi stays available for the control panel. You can also access the panel from your normal local network after AeroScope connects to your Wi-Fi.
+- Your latitude and longitude (you can learn your lat/lon from [here](https://www.latlong.net/my-location-latitude-longitude))
+  
+**In preferences tab:**
+- Geoapify API key for map images and airport markers (see next section for info).
 
 ### Map API Key
 
@@ -92,18 +92,11 @@ AeroScope uses [Geoapify Static Maps](https://www.geoapify.com/static-maps-api/)
 
 To enable maps:
 
-1. Create a Geoapify account.
-2. Create an API key.
+1. Create a Geoapify account using free plan and create an API key.
 3. Open the AeroScope control panel.
 4. Go to **Preferences** / **Map** and paste the key into **Geoapify API Key**.
 
-Geoapify has a free plan that is enough for light personal use at the time of writing. Check the current limits and terms here:
-
 [Geoapify pricing](https://www.geoapify.com/pricing/)
-
-Do not publish your personal API key in screenshots, issues, logs, or firmware releases.
-
-When maps are enabled, keep the required Geoapify/OpenStreetMap attribution visible in your documentation or project notes and follow the Geoapify plan terms for your usage.
 
 ## Use
 
