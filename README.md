@@ -92,11 +92,9 @@ AeroScope uses [Geoapify Static Maps](https://www.geoapify.com/static-maps-api/)
 
 To enable it:
 
-1. Create a Geoapify account using free plan and create an API key.
+1. Create a Geoapify account using **FREE** plan and create an API key.
 3. Open the AeroScope control panel.
 4. Go to **Preferences** / **Map** and paste the key into **Geoapify API Key**.
-
-[Geoapify pricing](https://www.geoapify.com/pricing/)
 
 ## Use
 
