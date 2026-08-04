@@ -88,7 +88,7 @@ In the control panel set at minimum the following:
 
 ### Map API Key
 
-AeroScope uses [Geoapify Static Maps](https://www.geoapify.com/static-maps-api/) for the radar map background and airport markers.
+AeroScope uses [Geoapify](https://myprojects.geoapify.com/register) for the radar map background and airport markers.
 
 To enable it:
 
