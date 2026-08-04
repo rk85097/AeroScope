@@ -22,7 +22,7 @@ Choose the N8R8 2.8-inch round capacitive touch variant:<br>
 
 Optional:
 
-- Due to licensing, I am unable to share the modified model I made based on this [existing model](https://makerworld.com/en/models/2872376-esp32-plane-radar-live-ads-b-on-a-round-display#profileId-3207083) so you should modify it yourself OR contribute to the project by creating a dedicated model :)
+- **3D print a table mount.** Due to the [original model's](https://makerworld.com/en/models/2872376-esp32-plane-radar-live-ads-b-on-a-round-display#profileId-3207083) license, I cannot redistribute the modified version I created for the display used in this project. You can either modify the original model yourself or, even better, contribute a brand-new enclosure design to the project.
 
 ## Install Firmware
 
