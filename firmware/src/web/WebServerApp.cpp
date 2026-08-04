@@ -31,7 +31,7 @@ String makeSessionToken() {
 
 bool hasSession(AsyncWebServerRequest* req) {
   if (sessionToken.isEmpty() || !req->hasHeader("Cookie")) return false;
-  return req->getHeader("Cookie")->value().indexOf("aeroscope_session=" + sessionToken) >= 0;
+  return req->getHeader("Cookie")->value().indexOf("desktop_airspace_session=" + sessionToken) >= 0;
 }
 
 bool requireAuth(AsyncWebServerRequest* req, ConfigManager* config) {
@@ -239,7 +239,7 @@ const char kEmbeddedPanel[] PROGMEM = R"HTML(
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>AeroScope</title>
+  <title>Desktop Airspace</title>
   <style>
     :root{font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#d9e7e4;background:#0c1216}
     body{margin:0;background:#0c1216}
@@ -273,7 +273,7 @@ const char kEmbeddedPanel[] PROGMEM = R"HTML(
 <body>
 <main>
   <header>
-    <div><h1>AeroScope</h1><p>Local setup panel</p></div>
+    <div><h1>Desktop Airspace</h1><p>Local setup panel</p></div>
     <button onclick="refresh()">Refresh</button>
   </header>
   <nav class="tabs">
@@ -649,7 +649,7 @@ function rotateScreen(){
   saveConfig();
 }
 async function reboot(){
-  saveMsg.textContent='Rebooting... reconnect to AeroScope-Setup in about 10 seconds.';
+  saveMsg.textContent='Rebooting... reconnect to DesktopAirspace-Setup in about 10 seconds.';
   await fetch('/api/reboot',{method:'POST'});
 }
 async function uploadFirmware(event){
@@ -667,7 +667,7 @@ async function factoryReset(){
   saveMsg.textContent=j.ok?'Factory reset. Rebooting...':'Factory reset failed';
 }
 async function resetDefaultStyle(){
-  if(!confirm('Reset AeroScope visual styling to the built-in defaults?')) return;
+  if(!confirm('Reset Desktop Airspace visual styling to the built-in defaults?')) return;
   saveMsg.textContent='Resetting style...';
   try{
     const r=await fetch('/api/style-reset',{method:'POST'});
@@ -906,7 +906,7 @@ void WebServerApp::begin(ConfigManager* config, RadarEngine* radar, MapPackageMa
     String out;
     serializeJsonPretty(doc, out);
     AsyncWebServerResponse* res = req->beginResponse(200, "application/json", out);
-    res->addHeader("Content-Disposition", "attachment; filename=aeroscope-diagnostics.json");
+    res->addHeader("Content-Disposition", "attachment; filename=desktop-airspace-diagnostics.json");
     req->send(res);
   });
 
@@ -1070,7 +1070,7 @@ void WebServerApp::begin(ConfigManager* config, RadarEngine* radar, MapPackageMa
     String out = file.readString();
     file.close();
     AsyncWebServerResponse* res = req->beginResponse(200, "application/json", out);
-    res->addHeader("Content-Disposition", "attachment; filename=\"aeroscope-preferences.json\"");
+    res->addHeader("Content-Disposition", "attachment; filename=\"desktop-airspace-preferences.json\"");
     res->addHeader("Cache-Control", "no-store");
     req->send(res);
   });
@@ -1294,7 +1294,7 @@ void WebServerApp::begin(ConfigManager* config, RadarEngine* radar, MapPackageMa
     }
     sessionToken = makeSessionToken();
     AsyncWebServerResponse* res = req->beginResponse(200, "application/json", "{\"ok\":true}");
-    res->addHeader("Set-Cookie", "aeroscope_session=" + sessionToken + "; Path=/; SameSite=Strict");
+    res->addHeader("Set-Cookie", "desktop_airspace_session=" + sessionToken + "; Path=/; SameSite=Strict");
     req->send(res);
   });
 

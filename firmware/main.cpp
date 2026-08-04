@@ -9,7 +9,7 @@ void setup() {
   Serial.begin(115200);
   delay(1500);
   Serial.println();
-  Serial.println("AeroScope boot");
+  Serial.println("Desktop Airspace boot");
   Serial.printf("Version: %s\n", MICRO_RADAR_VERSION);
   Serial.printf("Reset reason CPU0: %d\n", static_cast<int>(esp_reset_reason()));
   Serial.printf("Flash: %u bytes\n", ESP.getFlashChipSize());

@@ -32,7 +32,7 @@ function App() {
     <main>
       <header>
         <div>
-          <h1>AeroScope</h1>
+          <h1>Desktop Airspace</h1>
           <p>Local control panel</p>
         </div>
         <button onClick={refresh} title="Refresh"><RefreshCw size={18} /></button>

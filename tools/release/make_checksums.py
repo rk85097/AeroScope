@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Create SHA-256 checksums for generated AeroScope release artifacts."""
+"""Create SHA-256 checksums for generated Desktop Airspace release artifacts."""
 
 from __future__ import annotations
 

@@ -15,7 +15,7 @@ constexpr uint32_t kTlsBackgroundFreeHeap = 70000;
 constexpr uint32_t kTlsBackgroundMaxBlock = 42000;
 constexpr uint32_t kProviderMinFreeHeap = 46000;
 constexpr uint32_t kProviderLowHeapBackoffMs = 9000;
-constexpr const char* kSetupApSsid = "AeroScope-Setup";
+constexpr const char* kSetupApSsid = "DesktopAirspace-Setup";
 
 String compactCallsign(String callsign) {
   callsign.trim();

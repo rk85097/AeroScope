@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build compact AeroScope vector map packages from GeoJSON inputs."""
+"""Build compact Desktop Airspace vector map packages from GeoJSON inputs."""
 
 from __future__ import annotations
 

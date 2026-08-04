@@ -1712,11 +1712,11 @@ void drawFrame() {
 
 bool microRadarSmokeBegin() {
   if (panel && framebuffer) {
-    Serial.println("AeroScope display already initialized");
+    Serial.println("Desktop Airspace display already initialized");
     return true;
   }
   Serial.println();
-  Serial.println("AeroScope display smoke test");
+  Serial.println("Desktop Airspace display smoke test");
   Serial.printf("Renderer: %s\n", kRendererRevision);
   Serial.printf("Reset reason: %d\n", static_cast<int>(esp_reset_reason()));
   Serial.printf("PSRAM: %s, free=%u\n", psramFound() ? "yes" : "no", ESP.getFreePsram());
@@ -1751,7 +1751,7 @@ bool microRadarSmokeBegin() {
     return false;
   }
 
-  Serial.println("Drawing AeroScope smoke screen");
+  Serial.println("Drawing Desktop Airspace smoke screen");
   drawFrame();
   return true;
 }

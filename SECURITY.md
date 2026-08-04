@@ -1,6 +1,6 @@
 # Security
 
-AeroScope is designed for local administration only.
+Desktop Airspace is designed for local administration only.
 
 - First boot starts a captive portal for setup.
 - The control panel uses a local password and session token.

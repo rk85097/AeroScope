@@ -460,7 +460,7 @@ bool MapPackageManager::fetchStaticRasterMap(double centerLat, double centerLon,
   }
   http->addHeader("Accept", "image/png");
   http->addHeader("Accept-Encoding", "identity");
-  http->addHeader("User-Agent", "AeroScope/0.1 static map");
+  http->addHeader("User-Agent", "DesktopAirspace/0.1 static map");
   const int code = http->GET();
   const int responseSize = http->getSize();
   const String responseType = http->header("Content-Type");
@@ -588,7 +588,7 @@ void MapPackageManager::fetchGeoapifyAirports(double centerLat, double centerLon
   }
   http->addHeader("Accept", "application/json");
   http->addHeader("Accept-Encoding", "identity");
-  http->addHeader("User-Agent", "AeroScope/0.1 airport points");
+  http->addHeader("User-Agent", "DesktopAirspace/0.1 airport points");
   const int code = http->GET();
   String payload;
   bool readOk = false;

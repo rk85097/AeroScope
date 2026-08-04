@@ -68,7 +68,7 @@ The screen should boot into Desktop Airspace.
 2. Connect your phone or computer to the setup Wi-Fi network:
 
 ```text
-AeroScope-Setup
+DesktopAirspace-Setup
 ```
 
 3. Open the control panel (via any browser):

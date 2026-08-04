@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for helping improve AeroScope. Small fixes, hardware notes, UI ideas, screenshots, and bug reports are all welcome.
+Thanks for helping improve Desktop Airspace. Small fixes, hardware notes, UI ideas, screenshots, and bug reports are all welcome.
 
 The goal is to keep contributing simple and friendly.
 
