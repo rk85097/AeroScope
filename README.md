@@ -40,9 +40,8 @@ python -m pip install esptool
 ```
 
 3. Connect the radar board to your computer with USB-C.
-4. Put the board into boot mode:
+4. Put the board into boot mode (There are only 2 buttons on the board, one for BOOT and one for RESET):
 
-- There are only 2 buttons on the board, one for BOOT and one for RESET
 - Hold **BOOT**.
 - Tap **RESET** once.
 - Release **BOOT**.
