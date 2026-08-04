@@ -33,7 +33,7 @@ Download the latest firmware binary:
 Then flash it with `esptool.py`.
 
 1. Install [Python 3](https://www.python.org/downloads/)
-2. Install esptool:
+2. Once Python is installed, install esptool:
 
 ```bash
 python -m pip install esptool
