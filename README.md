@@ -1,5 +1,7 @@
 # AeroScope
 
+**NOTE: This project is intended solely as a desktop gadget and must not be used for real-world flight navigation or operational decision-making.**
+
 AeroScope turns an ESP32-S3 round touch display into a small live **aircraft radar desktop gadget**. It shows nearby aircraft over a static map, radar range controls, aircraft trails, airport markers, and a touch details page with flight/aircraft information.
 
 The idea came from looking at existing aircraft-radar display projects: some were very simple and hobby-looking, while others were polished but expensive. This project aims for the middle point: good-looking, useful, and affordable.
