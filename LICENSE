@@ -1,21 +1,107 @@
-AeroScope Personal Use License
+Replace the entire `LICENSE` file with this:
 
-Copyright (c) 2026 AeroScope contributors
+```text
+Desktop Airspace Personal and Non-Commercial Use License
+Version 1.0
 
-Permission is granted to use, copy, modify, and contribute to this project for
-personal, educational, research, and non-commercial hobby use.
+Copyright (c) 2026 Roy Kronenfeld
 
-Commercial use is not permitted without prior written permission from the
-project owner. Commercial use includes, but is not limited to:
+1. Scope
 
-- Selling the software, firmware, binaries, hardware kits, or derived products.
-- Bundling this project into a paid product or paid service.
-- Paid redistribution or hosting.
-- Use by a business, organization, or commercial operation to provide services.
+This license applies to the original Desktop Airspace source code, firmware,
+binaries, tools, documentation, images, and other materials contained in this
+repository (collectively, the "Software").
 
-You may share modified versions for non-commercial purposes, provided that this
-license notice remains included.
+Third-party libraries, components, assets, data, and other materials are not
+covered by this license. They remain subject to their respective licenses and
+terms.
 
-This project is provided "as is", without warranty of any kind. It is not
-certified aviation equipment and must not be used for navigation, safety,
-traffic separation, or any operational aviation decision.
+2. Permission
+
+Permission is granted, free of charge, to use, copy, modify, and distribute the
+Software solely for:
+
+- Personal use.
+- Non-commercial hobby use.
+- Educational use.
+- Academic or non-commercial research.
+- Contributing modifications back to the Desktop Airspace project.
+
+Modified versions may be distributed only for non-commercial purposes and only
+if:
+
+- This license and all copyright notices are retained.
+- The modified version is distributed under these same license terms.
+- The changes made to the Software are clearly identified.
+- The modified version is not represented as an official Desktop Airspace
+  release.
+
+3. Commercial Use Prohibited
+
+Commercial use of the Software is prohibited without prior written permission
+from the copyright holder.
+
+Commercial use includes, without limitation:
+
+- Selling, licensing, renting, or charging for the Software, firmware, binaries,
+  modified versions, or derived products.
+- Selling or distributing hardware, devices, or kits that include, bundle,
+  preinstall, or are marketed together with the Software.
+- Bundling the Software with a paid product, subscription, or service.
+- Paid redistribution, hosting, support, installation, or configuration.
+- Using the Software to provide a paid service or commercial offering.
+- Using the Software as part of the operations, products, product development,
+  demonstrations, marketing, or services of a business or commercial
+  organization.
+- Using the Software in a manner primarily intended for commercial advantage
+  or monetary compensation.
+
+Commercial permission may be requested directly from the copyright holder.
+
+4. Contributions
+
+Unless otherwise agreed in writing, any contribution intentionally submitted
+for inclusion in Desktop Airspace is provided under the terms of this license.
+
+By submitting a contribution, the contributor also grants the copyright holder
+a perpetual, worldwide, irrevocable, royalty-free, non-exclusive right to use,
+reproduce, modify, distribute, sublicense, and commercially license that
+contribution as part of Desktop Airspace.
+
+5. No Trademark License
+
+This license grants no rights to use any trademarks, service marks, trade names,
+logos, or branding owned by the copyright holder or by any third party.
+
+Permission to use, modify, or distribute the Software does not authorize the
+use of Desktop Airspace branding to identify, advertise, endorse, or promote a
+modified version, product, or service.
+
+6. Termination
+
+Any use of the Software outside the permissions granted by this license
+automatically terminates the rights granted to the violating party.
+
+If the violation is corrected within 30 days after receiving written notice,
+the rights granted by this license will be reinstated automatically for the
+first violation. Repeated violations require express written reinstatement from
+the copyright holder.
+
+7. Aviation Safety Notice
+
+Desktop Airspace is an uncertified desktop gadget intended for informational
+and entertainment purposes only.
+
+It must not be used for navigation, flight safety, traffic separation, aircraft
+tracking for operational purposes, or any other real-world aviation decision.
+
+8. Disclaimer of Warranty and Limitation of Liability
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE, ACCURACY, RELIABILITY, AND NON-INFRINGEMENT.
+
+IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY CLAIM,
+DAMAGES, LOSS, INJURY, OR OTHER LIABILITY ARISING FROM, OUT OF, OR IN CONNECTION
+WITH THE SOFTWARE OR ITS USE, WHETHER IN CONTRACT, TORT, OR OTHERWISE.
+```
